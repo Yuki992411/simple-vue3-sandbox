@@ -1,0 +1,65 @@
+name: CICD Pipeline (deploy to GitHub Pages)
+
+on:
+  push:
+    branches:
+      - '**'
+
+# For github pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  Deploy:
+    runs-on: self-hosted
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Cache node_modules
+        id: node_modules_cache_id
+        uses: actions/cache@v2
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node_modules-${{ hashFiles('**/pnpm-lock.yaml') }}-${{ github.event.before }}
+          restore-keys: |
+            ${{ runner.os }}-node_modules-
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+
+      - name: Enable Corepack
+        run: |
+          corepack enable
+          corepack enable npm
+
+      - name: Install Dependencies
+        if: steps.node_modules_cache_id.outputs.cache-hit != 'true'
+        run: |
+          pnpm i --prefer-offline --frozen-lockfile
+
+      - name: Test
+        run: |
+          pnpm lint
+          pnpm prettier
+          pnpm type-check
+          pnpm test:unit
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v2
+      - run: pnpm build
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v1
+        with:
+          path: './dist'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v1
