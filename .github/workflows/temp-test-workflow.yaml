@@ -1,6 +1,8 @@
 name: Test workflow
 on:
-  workflow_dispatch:
+  push:
+    branches:
+      - '**'
 jobs:
   test1:
     runs-on: self-hosted-arc-runner
