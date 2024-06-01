@@ -13,7 +13,7 @@ permissions:
 
 jobs:
   Deploy:
-    runs-on: self-hosted
+    runs-on: self-hosted-arc-runner
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
