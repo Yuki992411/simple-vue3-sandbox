@@ -21,6 +21,7 @@ import { DEFAULT_TIME_CANDIDATE } from '@/constants/form'
 import { TimeCandidateFormSchema, type TimeCandidateForm } from '@/schema/form'
 import { toTypedSchema } from '@vee-validate/zod'
 import { useField } from 'vee-validate'
+import { watch } from 'vue'
 
 const props = defineProps<{ index: number }>()
 const emits = defineEmits<{ remove: [index: number] }>()
@@ -60,6 +61,14 @@ const {
 const onAvailableBlur = (e: Event) => {
   availableHandleBlur(e, true)
 }
+
+watch(time, (value) => {
+  console.log(`[debug] time [${props.index}]: `, value)
+})
+
+watch(available, (value) => {
+  console.log(`[debug] available [${props.index}]: `, value)
+})
 </script>
 
 <style>

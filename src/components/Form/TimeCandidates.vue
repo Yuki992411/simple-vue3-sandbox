@@ -15,18 +15,6 @@ import { useFieldArray } from 'vee-validate'
 import TimeCandidate from '@/components/Form/TimeCandidate.vue'
 
 const { push, remove, fields } = useFieldArray<TimeCandidateForm>('timeCandidates')
-
-// defineField('timeCandidates', validateConfig)
-
-// watch(timeCandidates, (value) => {
-//   console.log('[debug] timeCandidates: ', value)
-// })
-// watch(errorBag, (value) => {
-//   console.log('[debug] errorBag: ', value)
-// })
-// watch(errors, (value) => {
-//   console.log('[debug] erros: ', value)
-// })
 </script>
 
 <style>

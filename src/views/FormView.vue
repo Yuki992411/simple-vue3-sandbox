@@ -30,6 +30,7 @@ import { useForm } from 'vee-validate'
 import FormTimeCandidates from '@/components/Form/TimeCandidates.vue'
 import { FormSchema, type Form } from '@/schema/form'
 import { DEFAULT_AGE, DEFAULT_NAME, DEFAULT_TIME_CANDIDATE } from '@/constants/form'
+import { watch } from 'vue'
 
 const { meta, errorBag, handleSubmit, defineField } = useForm<Form>({
   validationSchema: toTypedSchema(FormSchema),
@@ -47,15 +48,9 @@ const validateConfig = {
 const [formName, formNameAttr] = defineField('name', validateConfig)
 const [formAge, formAgeAttr] = defineField('age', validateConfig)
 
-// watch(timeCandidates, (value) => {
-//   console.log('[debug] timeCandidates: ', value)
-// })
-// watch(errorBag, (value) => {
-//   console.log('[debug] errorBag: ', value)
-// })
-// watch(errors, (value) => {
-//   console.log('[debug] erros: ', value)
-// })
+watch(errorBag, (value) => {
+  console.log('[debug] errorBag: ', value)
+})
 
 const onSubmit = handleSubmit((values) => {
   console.log(values)
