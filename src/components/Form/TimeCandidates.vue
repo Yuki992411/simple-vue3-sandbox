@@ -2,37 +2,7 @@
   <label>候補日</label>
   <ul v-for="(_, index) in fields" :key="`timeCandidates_${index}`">
     <li>
-      <div class="candidate">
-        <Field
-          :id="`timeCandidates_${index}_time`"
-          :name="`timeCandidates[${index}].time`"
-          v-slot="{ field, handleBlur }"
-        >
-          <input v-bind="field" @blur="handleBlur" class="input" />
-        </Field>
-        <Field
-          :id="`timeCandidates_${index}_available`"
-          :name="`timeCandidates[${index}].available`"
-          v-slot="{ field, handleBlur }"
-        >
-          <input v-bind="field" @blur="handleBlur" type="checkbox" />
-        </Field>
-        <div @click="remove(index)">delete</div>
-      </div>
-      <div
-        class="errors"
-        v-for="error in props.errorBag[`timeCandidates[${index}].time`]"
-        :key="`timeCandidates_${index}_time_${error}`"
-      >
-        {{ error }}
-      </div>
-      <div
-        class="errors"
-        v-for="error in props.errorBag[`timeCandidates[${index}].available`]"
-        :key="`timeCandidates_${index}_available_${error}`"
-      >
-        {{ error }}
-      </div>
+      <TimeCandidate :index="index" :errorBag="props.errorBag" @remove="remove" />
     </li>
   </ul>
   <div @click="push(DEFAULT_TIME_CANDIDATE)">add</div>
@@ -41,7 +11,8 @@
 <script setup lang="ts">
 import { DEFAULT_TIME_CANDIDATE } from '@/constants/form'
 import type { TimeCandidateForm } from '@/schema/form'
-import { Field, useFieldArray } from 'vee-validate'
+import { useFieldArray } from 'vee-validate'
+import TimeCandidate from '@/components/Form/TimeCandidate.vue'
 
 const props = defineProps<{ errorBag: Partial<Record<string, string[]>> }>()
 
