@@ -17,43 +17,7 @@
         </div>
       </div>
       <div>
-        <label>候補日</label>
-        <ul v-for="(_, index) in fields" :key="`timeCandidates_${index}`">
-          <li>
-            <div class="candidate">
-              <Field
-                :id="`timeCandidates_${index}_time`"
-                :name="`timeCandidates[${index}].time`"
-                v-slot="{ field, handleBlur }"
-              >
-                <input v-bind="field" @blur="handleBlur" class="input" />
-              </Field>
-              <Field
-                :id="`timeCandidates_${index}_available`"
-                :name="`timeCandidates[${index}].available`"
-                v-slot="{ field, handleBlur }"
-              >
-                <input v-bind="field" @blur="handleBlur" type="checkbox" />
-              </Field>
-              <div @click="remove(index)">delete</div>
-            </div>
-            <div
-              class="errors"
-              v-for="error in errorBag[`timeCandidates.${index}.time`]"
-              :key="`timeCandidates_${index}_time_${error}`"
-            >
-              {{ error }}
-            </div>
-            <div
-              class="errors"
-              v-for="error in errorBag[`timeCandidates.${index}.available`]"
-              :key="`timeCandidates_${index}_available_${error}`"
-            >
-              {{ error }}
-            </div>
-          </li>
-        </ul>
-        <div @click="push(initialTimeCandidate)">add</div>
+        <FormTimeCandidates :error-bag="errorBag" />
       </div>
       <button :disabled="!meta.valid">Submit</button>
     </form>
@@ -62,39 +26,19 @@
 
 <script setup lang="ts">
 import { toTypedSchema } from '@vee-validate/zod'
-import { Field, useFieldArray, useForm } from 'vee-validate'
-import { z } from 'zod'
+import { useForm } from 'vee-validate'
+import FormTimeCandidates from '@/components/Form/TimeCandidates.vue'
+import { FormSchema, type Form } from '@/schema/form'
+import { DEFAULT_AGE, DEFAULT_NAME, DEFAULT_TIME_CANDIDATE } from '@/constants/form'
 
-const FormSchema = z.object({
-  name: z.string().min(2).min(3).max(10),
-  age: z.coerce.number().min(18),
-  timeCandidates: z.array(
-    z.object({
-      time: z.string().regex(/^[0-9]{2}:[0-9]{2}$/, {
-        message: 'hh:mmの形式で入力してください'
-      }),
-      available: z.literal(false, {
-        message: 'チェックしてください'
-      })
-    })
-  )
-})
-
-const initialTimeCandidate = { time: '', available: false } as const satisfies z.infer<
-  typeof FormSchema
->['timeCandidates'][number]
-
-const { meta, errors, errorBag, handleSubmit, defineField } = useForm<z.infer<typeof FormSchema>>({
+const { meta, errorBag, handleSubmit, defineField } = useForm<Form>({
   validationSchema: toTypedSchema(FormSchema),
   initialValues: {
-    name: '',
-    age: 20,
-    timeCandidates: [initialTimeCandidate]
+    name: DEFAULT_NAME,
+    age: DEFAULT_AGE,
+    timeCandidates: [DEFAULT_TIME_CANDIDATE]
   }
 })
-
-const { push, remove, fields } =
-  useFieldArray<z.infer<typeof FormSchema>['timeCandidates'][number]>('timeCandidates')
 
 const validateConfig = {
   validateOnBlur: true
@@ -102,7 +46,6 @@ const validateConfig = {
 
 const [formName, formNameAttr] = defineField('name', validateConfig)
 const [formAge, formAgeAttr] = defineField('age', validateConfig)
-defineField('timeCandidates', validateConfig)
 
 // watch(timeCandidates, (value) => {
 //   console.log('[debug] timeCandidates: ', value)
@@ -126,12 +69,6 @@ const onSubmit = handleSubmit((values) => {
   border-radius: 4px;
   padding: 8px;
   margin: 8px;
-}
-
-.candidate {
-  display: flex;
-  gap: 8px;
-  align-items: center;
 }
 
 .errors {
