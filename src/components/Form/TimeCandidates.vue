@@ -2,7 +2,7 @@
   <label>候補日</label>
   <ul v-for="(_, index) in fields" :key="`timeCandidates_${index}`">
     <li>
-      <TimeCandidate :index="index" :errorBag="props.errorBag" @remove="remove" />
+      <TimeCandidate :index="index" @remove="remove" />
     </li>
   </ul>
   <div @click="push(DEFAULT_TIME_CANDIDATE)">add</div>
@@ -13,8 +13,6 @@ import { DEFAULT_TIME_CANDIDATE } from '@/constants/form'
 import type { TimeCandidateForm } from '@/schema/form'
 import { useFieldArray } from 'vee-validate'
 import TimeCandidate from '@/components/Form/TimeCandidate.vue'
-
-const props = defineProps<{ errorBag: Partial<Record<string, string[]>> }>()
 
 const { push, remove, fields } = useFieldArray<TimeCandidateForm>('timeCandidates')
 

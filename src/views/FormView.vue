@@ -17,7 +17,7 @@
         </div>
       </div>
       <div>
-        <FormTimeCandidates :error-bag="errorBag" />
+        <FormTimeCandidates />
       </div>
       <button :disabled="!meta.valid">Submit</button>
     </form>

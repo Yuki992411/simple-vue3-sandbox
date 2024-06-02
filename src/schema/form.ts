@@ -4,7 +4,7 @@ export const TimeCandidateFormSchema = z.object({
   time: z.string().regex(/^[0-9]{2}:[0-9]{2}$/, {
     message: 'hh:mmの形式で入力してください'
   }),
-  available: z.literal(false, {
+  available: z.coerce.boolean().refine((value) => value === true, {
     message: 'チェックしてください'
   })
 })
