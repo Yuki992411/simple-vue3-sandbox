@@ -18,6 +18,13 @@
       </div>
       <div>
         <FormTimeCandidates />
+        <div
+          class="errors"
+          v-for="error in errorBag.timeCandidates"
+          :key="`formTimeCandidates_${error}`"
+        >
+          {{ error }}
+        </div>
       </div>
       <button :disabled="!meta.valid">Submit</button>
     </form>
