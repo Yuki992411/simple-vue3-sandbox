@@ -1,6 +1,6 @@
 <template>
   <label>候補日</label>
-  <ul v-for="(_, index) in fields" :key="`timeCandidates_${index}`">
+  <ul v-for="(field, index) in fields" :key="`timeCandidates_${field.key}`">
     <li>
       <TimeCandidate :index="index" @remove="remove" />
     </li>

@@ -35,7 +35,7 @@ const {
   handleBlur: timeHandleBlur,
   errors: timeErrors
 } = useField<TimeCandidateForm['time']>(
-  `timeCandidates[${props.index}].time`,
+  () => `timeCandidates[${props.index}].time`,
   toTypedSchema(TimeCandidateFormSchema.shape.time),
   {
     initialValue: DEFAULT_TIME_CANDIDATE.time
@@ -51,7 +51,7 @@ const {
   handleBlur: availableHandleBlur,
   errors: availableErrors
 } = useField<TimeCandidateForm['available']>(
-  `timeCandidates[${props.index}].available`,
+  () => `timeCandidates[${props.index}].available`,
   toTypedSchema(TimeCandidateFormSchema.shape.available),
   {
     initialValue: DEFAULT_TIME_CANDIDATE.available
