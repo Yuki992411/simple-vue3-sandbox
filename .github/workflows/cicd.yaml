@@ -16,6 +16,9 @@ jobs:
     # runs-on: self-hosted-arc-runner
     runs-on: ubuntu-latest
     steps:
+      - name: Workaround for corepack
+        run: echo "COREPACK_INTEGRITY_KEYS=0" >> $GITHUB_ENV
+
       - name: Checkout Repository
         uses: actions/checkout@v4
         with:
