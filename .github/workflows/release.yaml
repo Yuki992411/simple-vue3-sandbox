@@ -27,6 +27,9 @@ jobs:
       (github.event_name == 'pull_request' && github.event.pull_request.merged == true)
     runs-on: ubuntu-latest
     steps:
+      - name: Workaround for corepack
+        run: echo "COREPACK_INTEGRITY_KEYS=0" >> $GITHUB_ENV
+
       - name: Checkout Repository
         uses: actions/checkout@v4
         with:
@@ -36,6 +39,10 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
+
+      - name: Enable Corepack
+        run: |
+          corepack enable
 
       - name: Install dependencies
         run: pnpm i --prefer-offline --frozen-lockfile
