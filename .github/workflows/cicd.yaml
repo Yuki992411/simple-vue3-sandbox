@@ -13,7 +13,8 @@ permissions:
 
 jobs:
   Deploy:
-    runs-on: self-hosted-arc-runner
+    # runs-on: self-hosted-arc-runner
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -56,7 +57,7 @@ jobs:
       - run: pnpm build
 
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v1
+        uses: actions/upload-pages-artifact@v3
         with:
           path: './dist'
 

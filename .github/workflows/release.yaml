@@ -1,0 +1,66 @@
+name: Release
+
+on:
+  pull_request:
+    types:
+      - closed
+    branches:
+      - main
+
+  # 手動実行（リリースタイプを選択）
+  workflow_dispatch:
+    inputs:
+      releaseType:
+        description: 'Select release type'
+        required: true
+        default: 'patch'
+        type: choice
+        options:
+          - major
+          - minor
+          - patch
+
+jobs:
+  release:
+    if: |
+      github.event_name == 'workflow_dispatch' ||
+      (github.event_name == 'pull_request' && github.event.pull_request.merged == true)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: pnpm i --prefer-offline --frozen-lockfile
+
+      - name: Determine release type
+        id: release_type
+        run: |
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            # 手動実行のときは、入力された releaseType を使う
+            echo "release_type=${{ github.event.inputs.releaseType }}" >> $GITHUB_OUTPUT
+          else
+            # PRマージ時は、マージ元ブランチ名で判断
+            SOURCE_BRANCH=${{ github.event.pull_request.head.ref }}
+            echo "Source branch: $SOURCE_BRANCH"
+
+            if [[ "$SOURCE_BRANCH" == fix/* ]]; then
+              echo "release_type=patch" >> $GITHUB_OUTPUT
+            elif [[ "$SOURCE_BRANCH" == develop ]]; then
+              echo "release_type=major" >> $GITHUB_OUTPUT
+            else
+              echo "release_type=minor" >> $GITHUB_OUTPUT
+            fi
+          fi
+
+      - name: Run release-it
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npm run release -- --ci ${{ steps.release_type.outputs.release_type }}
