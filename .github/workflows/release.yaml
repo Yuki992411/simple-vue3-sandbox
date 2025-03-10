@@ -70,4 +70,4 @@ jobs:
       - name: Run release-it
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: npm run release -- --ci ${{ steps.release_type.outputs.release_type }}
+        run: pnpm exec release-it --ci --increment=${{ steps.release_type.outputs.release_type }}
