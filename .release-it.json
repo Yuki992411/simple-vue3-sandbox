@@ -1,0 +1,15 @@
+{
+  "$schema": "https://unpkg.com/release-it@18/schema/release-it.json",
+  "npm": {
+    "publish": false
+  },
+  "git": {
+    "commitMessage": "[bump] release v${version}",
+    "tagName": "v${version}"
+  },
+  "github": {
+    "release": true,
+    "releaseName": "Release v${version}",
+    "autoGenerate": true
+  }
+}
