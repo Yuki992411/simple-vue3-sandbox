@@ -70,8 +70,8 @@ jobs:
       - name: check git
         run: git diff
 
-      - name: check git (staged)
-        run: git diff --staged
+      - name: Restore git
+        run: git restore .
 
       - name: Run release-it
         env:
