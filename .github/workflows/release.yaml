@@ -68,7 +68,10 @@ jobs:
           fi
 
       - name: check git
-        run: git status
+        run: git diff
+
+      - name: check git (staged)
+        run: git diff --staged
 
       - name: Run release-it
         env:
