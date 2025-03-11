@@ -67,12 +67,6 @@ jobs:
             fi
           fi
 
-      - name: check git
-        run: git diff
-
-      - name: Restore git
-        run: git restore .
-
       - name: Run release-it
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
