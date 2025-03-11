@@ -67,6 +67,9 @@ jobs:
             fi
           fi
 
+      - name: check git
+        run: git status
+
       - name: Run release-it
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
