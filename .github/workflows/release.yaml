@@ -74,11 +74,12 @@ jobs:
             fi
           fi
 
-      - name: Skip release if release_type is none
+      - name: Comment on PR if release skipped
         if: steps.release_type.outputs.release_type == 'none'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          echo "Skipping release-it because this is a no-release branch."
-          exit 0
+          gh pr comment ${{ github.event.pull_request.number }} --body "🚫 このPRは \`no-release\` ブランチからのマージなので、リリースはスキップされました。"
 
       - name: Run release-it
         if: steps.release_type.outputs.release_type != 'none'
